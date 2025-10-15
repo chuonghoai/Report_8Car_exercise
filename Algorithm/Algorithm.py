@@ -79,6 +79,7 @@ def free_col(state, n=N):
 # Tạo trạng thái ngẫu nhiên
 def random_state(n=N):
         return [random.randint(0, n - 1) for _ in range(n)]
+    
 # 1. BFS
 def BFS(n=8):
     process = []
@@ -147,15 +148,14 @@ def DLS(n=8, limit=8):
     process = []
 
     def recursive(path, depth):
-        process.append(path.copy())  # lưu trạng thái hiện tại
-        if len(path) == n:  # đủ 8 quân
+        process.append(path.copy())
+        if len(path) == n:
             return path
         elif depth == 0:
             return "cutoff"
         row = len(path)
         cutoff_occurred = False
         for col in range(n):
-            # kiểm tra xung đột với các quân đã đặt
             conflict = any(col == c for r, c in path)
             if not conflict:
                 child_path = path + [(row, col)]
@@ -185,9 +185,9 @@ def IDS(n=8, maxDepth=10):
 # 6. Greedy
 def greedy(n=8):
     process = []
-    start_path = []  # path rỗng ban đầu
+    start_path = []
     start_h = heuristic(start_path, n)
-    queue = [(start_h, start_path)]  # heap: (heuristic, path)
+    queue = [(start_h, start_path)]  # (heuristic, path)
 
     while queue:
         _, path = heapq.heappop(queue)
@@ -231,8 +231,8 @@ def Astar(n=8):
 
 # 8. Hill Climbing
 def HillClimbing(n=8):
-    path = []       # path hiện tại
-    process = []     # danh sách các ô (row, col) đã thử
+    path = []
+    process = []
 
     for row in range(n):
         best_col = None
@@ -241,7 +241,7 @@ def HillClimbing(n=8):
         for col in range(n):
             tempPath = path + [col]
             cost = costConflict(tempPath)
-            process.append(tempPath)  # lưu ô đang thử
+            process.append(tempPath)
 
             if cost < best_cost:
                 best_cost = cost
@@ -293,7 +293,7 @@ def geneticAlgorithm(n=8, pop_size=100, generations=500, mutate_rate=0.1):
                 state[i] = random.randint(0, n - 1)
 
     population = [random_state() for _ in range(pop_size)]
-    process = []  # lưu tất cả state được duyệt
+    process = []
 
     for _ in range(generations):
         # lưu tất cả cá thể của thế hệ hiện tại
