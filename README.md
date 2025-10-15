@@ -23,7 +23,7 @@
 
 - **Minh họa**:
 
-![Image](https://github.com/user-attachments/assets/0210a6de-8c93-4a7d-b118-09693092f394)
+![BFS](https://github.com/user-attachments/assets/0210a6de-8c93-4a7d-b118-09693092f394)
 
 #### b) DFS
 #### c) UCS
