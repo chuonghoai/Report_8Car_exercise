@@ -3,7 +3,6 @@ from UI.UiComponent import Frame, Button, Board, Label, ComboBox, Text
 from Algorithm import Algorithm
 import tkinter as tk
 import tkextrafont
-import copy
 
 # Biến toàn cục cho chương trình
 N = 8
