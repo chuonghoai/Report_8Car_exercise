@@ -47,7 +47,7 @@ if __name__=="__main__":
     RunBtn = Button(frameButtonRight).draw(1, 0, text="Run", background="cyan", width=8, height=1, fontSize=13)
 
     # Tạo combo box chọn thuật toán
-    algorithmName = ["BFS", "DFS", "IDL", "IDS", "UCS",
+    algorithmName = ["BFS", "DFS", "DLS", "IDS", "UCS",
                      "Greedy", "A*",
                      "Hill - Climbing", "Simulated Annealing", "Genetic Algorithm", "Beam Search",
                      "AND-OR Tree Search", "Belief State Search", "Partially Observable Spaces",

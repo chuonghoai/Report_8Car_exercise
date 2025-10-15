@@ -10,7 +10,7 @@ def run(choosed, n=N):
     if choosed == "BFS": return BFS(n)
     elif choosed == "DFS": return DFS(n)
     elif choosed == "UCS": return UCS(n)
-    elif choosed == "IDL": return IDL(n)
+    elif choosed == "DLS": return DLS(n)
     elif choosed == "IDS": return IDS(n)
     elif choosed == "Greedy": return greedy(n)
     elif choosed == "A*": return Astar(n)
@@ -82,13 +82,16 @@ def BFS(n=8):
     q = deque([([], 0)])
     while q:
         pos, row = q.popleft()
+        process.append(pos)
         if row == n:
             return pos, process
+        
+        used_col = set(pos)
         for col in range(n):
-            if col not in pos:
+            if col not in used_col:
                 new_pos = pos + [col]
                 q.append((new_pos, row + 1))
-                process.append(new_pos)
+    return None, process
 
 # 2. DFS
 def DFS(n=8, visible_mode=False, startState=None):
@@ -125,6 +128,7 @@ def UCS(n=8):
         process.append(path.copy())
 
         if len(path) == n:
+            print(len(process))
             return path, process
 
         row = len(path)
@@ -133,11 +137,10 @@ def UCS(n=8):
             if not conflict:
                 new_path = path + [(row, col)]
                 heapq.heappush(frontier, (CalCost(new_path), new_path))
-
     return [], process
 
 # 4. IDL
-def IDL(n=8, limit=8):
+def DLS(n=8, limit=8):
     process = []
 
     def recursive(path, depth):
@@ -170,7 +173,7 @@ def IDL(n=8, limit=8):
 def IDS(n=8, maxDepth=10):
     totalProcess = []
     for depth in range(1, maxDepth + 1):
-        path, process = IDL(n, limit=depth)
+        path, process = DLS(n, limit=depth)
         totalProcess.extend(process)
         if path != "cutoff" and path is not False:
             return path, totalProcess
