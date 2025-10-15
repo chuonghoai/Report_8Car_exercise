@@ -76,6 +76,9 @@ def free_col(state, n=N):
     used = set(state)
     return [c for c in range(n) if c not in used]
     
+# Tạo trạng thái ngẫu nhiên
+def random_state(n=N):
+        return [random.randint(0, n - 1) for _ in range(n)]
 # 1. BFS
 def BFS(n=8):
     process = []
@@ -273,9 +276,6 @@ def SimulatedAnnealing(n=8, T=1000, T_min=1, alpha=0.95):
 
 # 10. Genetic Algorithm
 def geneticAlgorithm(n=8, pop_size=100, generations=500, mutate_rate=0.1):
-    def random_state():
-        return [random.randint(0, n - 1) for _ in range(n)]
-
     def select_parent(population, k=3):
         participants = random.sample(population, k)
         participants.sort(key=lambda s: costConflict(s))
@@ -292,11 +292,9 @@ def geneticAlgorithm(n=8, pop_size=100, generations=500, mutate_rate=0.1):
             if random.random() < mutate_rate:
                 state[i] = random.randint(0, n - 1)
 
-    # ======== KHỞI TẠO ========
     population = [random_state() for _ in range(pop_size)]
     process = []  # lưu tất cả state được duyệt
 
-    # ======== VÒNG LẶP TIẾN HÓA ========
     for _ in range(generations):
         # lưu tất cả cá thể của thế hệ hiện tại
         process.extend(population)
@@ -324,26 +322,17 @@ def geneticAlgorithm(n=8, pop_size=100, generations=500, mutate_rate=0.1):
 
 # 11. Beam Search
 def beam(n=8, k=5, max_loop=200):
-    def random_state():
-        return [random.randint(0, n - 1) for _ in range(n)]
-
-    # ======== KHỞI TẠO ========
     beam = [(random_state(), None) for _ in range(k)]
     beam = [(state, costConflict(state)) for state, _ in beam]
-    process = []  # lưu tất cả các state đã duyệt
+    process = []
 
-    # ======== VÒNG LẶP CHÍNH ========
     for _ in range(max_loop):
-        # sắp xếp beam theo chi phí
         beam.sort(key=lambda x: x[1])
         best_state, best_cost = beam[0]
-        process.extend([s for s, _ in beam[::-1]])  # lưu các state trong beam hiện tại
-
-        # kiểm tra nghiệm hoàn hảo
+        process.extend([s for s, _ in beam[::-1]])
         if best_cost == 0:
             return best_state, process
 
-        # sinh tất cả neighbor
         neighbors = []
         for state, _ in beam:
             for row in range(n):
@@ -354,7 +343,7 @@ def beam(n=8, k=5, max_loop=200):
                     new_state[row] = col
                     neighbors.append((new_state, costConflict(new_state)))
 
-        # chọn k trạng thái tốt nhất làm beam mới
+        # chọn k trạng thái tốt nhất
         neighbors.sort(key=lambda x: x[1])
         beam = neighbors[:k]
 
@@ -362,12 +351,11 @@ def beam(n=8, k=5, max_loop=200):
 
 # 12. AND-OR tree search
 def AndOrTreeSearch(n=8):
-    process = []  # lưu tất cả state đã duyệt qua
+    process = []
 
     def or_search(state, path):
-        process.append(state[:])  # lưu lại state được duyệt
+        process.append(state[:])
 
-        # nếu đủ n hàng -> hoàn thành
         if len(state) == n:
             return []
 
@@ -375,7 +363,6 @@ def AndOrTreeSearch(n=8):
         if state in path:
             return None
 
-        # duyệt các cột có thể đặt
         for col in free_col(state):
             child = [state + [col]]
             plan = and_search(child, path + [state])
@@ -392,7 +379,6 @@ def AndOrTreeSearch(n=8):
             plans.append((s, plan))
         return plans
 
-    # bắt đầu từ state rỗng
     plan = or_search([], [])
     return plan, process
 
@@ -478,15 +464,19 @@ def forwardCheckingAlgorithm(n=8):
             return state
         if row >= n:
             return None
+        
         for col in list(domain[row]):
             new_domain = {r: set(cols) for r, cols in domain.items()}
             state.append((row, col))
+        
             for r in range(row + 1, n):
                 if col in new_domain[r]:
                     new_domain[r].remove(col)
+        
             if any(len(new_domain[r]) == 0 for r in range(row + 1, n)):
                 state.pop()
                 continue
+        
             rs = forwardChecking(state, row + 1, new_domain)
             if rs is None:
                 state.pop()
